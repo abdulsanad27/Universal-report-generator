@@ -1,0 +1,833 @@
+/* ===========================================================
+   RESET
+=========================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:"Segoe UI",sans-serif;
+
+    background:#f4f7fb;
+
+    color:#333;
+
+    min-height:100vh;
+
+}
+
+
+/* ===========================================================
+   HEADER
+=========================================================== */
+
+header{
+
+    background:#1565C0;
+
+    color:white;
+
+    padding:18px 30px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    box-shadow:0 3px 8px rgba(0,0,0,.15);
+
+}
+
+.logo{
+
+    font-size:24px;
+
+    font-weight:bold;
+
+}
+
+.suite-name{
+
+    font-size:15px;
+
+    opacity:.9;
+
+}
+
+
+/* ===========================================================
+   SUMMARY
+=========================================================== */
+
+.summary{
+
+    display:flex;
+
+    gap:20px;
+
+    padding:25px;
+
+    flex-wrap:wrap;
+
+}
+
+.card{
+
+    flex:1;
+
+    min-width:150px;
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    text-align:center;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.card .number{
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    margin-bottom:10px;
+
+}
+
+.card .title{
+
+    font-size:15px;
+
+    color:#666;
+
+}
+
+
+/* ===========================================================
+   CARD COLORS
+=========================================================== */
+
+.total{
+
+    border-top:5px solid #1E88E5;
+
+}
+
+.total .number{
+
+    color:#1565C0;
+
+}
+
+.pass{
+
+    border-top:5px solid #43A047;
+
+}
+
+.pass .number{
+
+    color:#2E7D32;
+
+}
+
+.fail{
+
+    border-top:5px solid #E53935;
+
+}
+
+.fail .number{
+
+    color:#C62828;
+
+}
+
+.skip{
+
+    border-top:5px solid #FB8C00;
+
+}
+
+.skip .number{
+
+    color:#EF6C00;
+
+}
+
+.time{
+
+    border-top:5px solid #8E24AA;
+
+}
+
+.time .number{
+
+    color:#7B1FA2;
+
+}
+
+
+/* ===========================================================
+   TOOLBAR
+=========================================================== */
+
+.toolbar{
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:center;
+
+    padding:20px 25px;
+
+    flex-wrap:wrap;
+
+}
+
+.no-test-data,
+.message-box {
+    width:100%;
+    padding:20px 25px;
+}
+
+.no-test-data .message-box{
+    background:#fff3cd;
+    border:1px solid #ffeeba;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.05);
+}
+
+.no-test-data h2{
+    margin-bottom:10px;
+    color:#856404;
+}
+
+.no-test-data p{
+    color:#664d03;
+    line-height:1.6;
+}
+
+
+/* ===========================================================
+   SEARCH
+=========================================================== */
+
+#searchBox{
+
+    flex:1;
+
+    min-width:250px;
+
+    padding:12px 15px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    outline:none;
+
+    font-size:15px;
+
+}
+
+#searchBox:focus{
+
+    border-color:#1565C0;
+
+}
+
+
+/* ===========================================================
+   FILTER BUTTONS
+=========================================================== */
+
+.filter-btn{
+
+    padding:10px 20px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    background:#e3e3e3;
+
+    transition:.3s;
+
+    font-size:14px;
+
+}
+
+.filter-btn:hover{
+
+    background:#1565C0;
+
+    color:white;
+
+}
+
+.filter-btn.active{
+
+    background:#1565C0;
+
+    color:white;
+
+}
+
+
+/* ===========================================================
+   CONTENT
+=========================================================== */
+
+.content{
+
+    padding:25px;
+
+}
+
+
+/* ===========================================================
+   CLASS BOX
+=========================================================== */
+
+.class-box{
+
+    background:white;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    margin-bottom:25px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+}
+
+
+/* ===========================================================
+   CLASS HEADER
+=========================================================== */
+
+.class-header{
+
+    background:#ECEFF1;
+
+    padding:16px 20px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.class-header:hover{
+
+    background:#E3F2FD;
+
+}
+
+.classname{
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    flex:1;
+
+}
+
+.arrow{
+
+    font-size:18px;
+
+    transition:.3s;
+
+}
+
+
+/* ===========================================================
+   BADGES
+=========================================================== */
+
+.badge{
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+.badge.pass{
+
+    background:#43A047;
+
+}
+
+.badge.fail{
+
+    background:#E53935;
+
+}
+
+.badge.skip{
+
+    background:#FB8C00;
+
+}
+
+
+/* ===========================================================
+   CLASS TIME
+=========================================================== */
+
+.class-header .time{
+
+    font-size:14px;
+
+    color:#666;
+
+}
+
+/* ===========================================================
+   TABLE
+=========================================================== */
+
+.class-body{
+
+    display:block;
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+thead{
+
+    background:#1565C0;
+
+    color:white;
+
+}
+
+thead th{
+
+    padding:14px;
+
+    text-align:left;
+
+    font-size:14px;
+
+}
+
+tbody tr{
+
+    border-bottom:1px solid #eeeeee;
+
+    transition:.2s;
+
+}
+
+tbody tr:hover{
+
+    background:#f7fbff;
+
+}
+
+tbody td{
+
+    padding:14px;
+
+    vertical-align:top;
+
+    font-size:14px;
+
+}
+
+
+/* ===========================================================
+   STATUS BADGES
+=========================================================== */
+
+.status{
+
+    display:inline-block;
+
+    min-width:70px;
+
+    text-align:center;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+}
+
+.status.pass{
+
+    background:#43A047;
+
+}
+
+.status.fail{
+
+    background:#E53935;
+
+}
+
+.status.skip{
+
+    background:#FB8C00;
+
+}
+
+
+/* ===========================================================
+   DETAILS BUTTON
+=========================================================== */
+
+.details-btn{
+
+    border:none;
+
+    background:#1565C0;
+
+    color:white;
+
+    padding:8px 14px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-size:13px;
+
+}
+
+.details-btn:hover{
+
+    background:#0D47A1;
+
+}
+
+
+/* ===========================================================
+   FAILURE PANEL
+=========================================================== */
+
+.failure-row{
+
+    background:#FFF8F8;
+
+}
+
+.failure-box{
+
+    background:#FAFAFA;
+
+    border-left:5px solid #E53935;
+
+    padding:20px;
+
+    margin:10px;
+
+    border-radius:8px;
+
+}
+
+.failure-box h4{
+
+    color:#C62828;
+
+    margin-bottom:10px;
+
+    margin-top:15px;
+
+}
+
+.failure-box h4:first-child{
+
+    margin-top:0;
+
+}
+
+.failure-box pre{
+
+    background:#212121;
+
+    color:#EEEEEE;
+
+    padding:15px;
+
+    border-radius:6px;
+
+    overflow-x:auto;
+
+    white-space:pre-wrap;
+
+    word-break:break-word;
+
+    font-size:13px;
+
+    line-height:1.5;
+
+}
+
+
+/* ===========================================================
+   COLLAPSE
+=========================================================== */
+
+.class-box.collapsed .class-body{
+
+    display:none;
+
+}
+
+.class-box.collapsed .arrow{
+
+    transform:rotate(-90deg);
+
+}
+
+
+/* ===========================================================
+   EMPTY MESSAGE
+=========================================================== */
+
+.no-data{
+
+    text-align:center;
+
+    padding:40px;
+
+    color:#777;
+
+    font-size:18px;
+
+}
+
+
+/* ===========================================================
+   SCROLLBAR
+=========================================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+    height:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#EEEEEE;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#1565C0;
+
+    border-radius:10px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#0D47A1;
+
+}
+
+
+/* ===========================================================
+   RESPONSIVE
+=========================================================== */
+
+@media(max-width:1000px){
+
+.summary{
+
+    flex-direction:column;
+
+}
+
+.card{
+
+    width:100%;
+
+}
+
+.toolbar{
+
+    flex-direction:column;
+
+    align-items:stretch;
+
+}
+
+#searchBox{
+
+    width:100%;
+
+}
+
+.class-header{
+
+    flex-wrap:wrap;
+
+}
+
+.classname{
+
+    width:100%;
+
+}
+
+table{
+
+    font-size:13px;
+
+}
+
+thead{
+
+    display:none;
+
+}
+
+tbody tr{
+
+    display:block;
+
+    border-bottom:2px solid #eeeeee;
+
+}
+
+tbody td{
+
+    display:block;
+
+    padding:10px;
+
+}
+
+tbody td::before{
+
+    font-weight:bold;
+
+    display:block;
+
+    margin-bottom:4px;
+
+}
+
+tbody td:nth-child(1)::before{
+
+    content:"Status";
+
+}
+
+tbody td:nth-child(2)::before{
+
+    content:"Function";
+
+}
+
+tbody td:nth-child(3)::before{
+
+    content:"Time";
+
+}
+
+tbody td:nth-child(4)::before{
+
+    content:"Details";
+
+}
+
+.failure-box{
+
+    margin:5px;
+
+}
+
+}
+
+
+/* ===========================================================
+   SMOOTH ANIMATION
+=========================================================== */
+
+.class-box{
+
+    animation:fadeIn .25s ease;
+
+}
+
+@keyframes fadeIn{
+
+from{
+
+    opacity:0;
+
+    transform:translateY(10px);
+
+}
+
+to{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+}

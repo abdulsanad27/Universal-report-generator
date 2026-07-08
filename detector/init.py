@@ -1,0 +1,1 @@
+from .file_detector import detect_file_type

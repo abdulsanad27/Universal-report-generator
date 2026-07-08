@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ report.suite_name }}</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/report.css') }}">
+
+</head>
+
+<body>
+
+<!-- ====================================================== -->
+<!-- HEADER -->
+<!-- ====================================================== -->
+
+<header>
+
+    <div class="logo">
+
+        📊 Universal Test Report Analyzer
+
+    </div>
+
+    <div class="suite-name">
+
+        {{ report.suite_name }}
+
+    </div>
+
+</header>
+
+
+<!-- ====================================================== -->
+<!-- SUMMARY -->
+<!-- ====================================================== -->
+
+{% if report.note %}
+<section class="no-test-data">
+    <div class="message-box">
+        <h2>No test case data found</h2>
+        <p>{{ report.note }}</p>
+    </div>
+</section>
+{% endif %}
+
+<section class="summary">
+
+    <div class="card total">
+
+        <div class="number">
+
+            {{ report.total }}
+
+        </div>
+
+        <div class="title">
+
+            Total
+
+        </div>
+
+    </div>
+
+    <div class="card pass">
+
+        <div class="number">
+
+            {{ report.passed }}
+
+        </div>
+
+        <div class="title">
+
+            Passed
+
+        </div>
+
+    </div>
+
+    <div class="card fail">
+
+        <div class="number">
+
+            {{ report.failed }}
+
+        </div>
+
+        <div class="title">
+
+            Failed
+
+        </div>
+
+    </div>
+
+    <div class="card skip">
+
+        <div class="number">
+
+            {{ report.skipped }}
+
+        </div>
+
+        <div class="title">
+
+            Skipped
+
+        </div>
+
+    </div>
+
+    <div class="card time">
+
+        <div class="number">
+
+            {{ report.time }}
+
+        </div>
+
+        <div class="title">
+
+            Seconds
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ====================================================== -->
+<!-- TOOLBAR -->
+<!-- ====================================================== -->
+
+<section class="toolbar">
+
+    <input
+
+            id="searchBox"
+
+            type="text"
+
+            placeholder="Search class or function">
+
+    <button class="filter-btn active"
+
+            onclick="filterTests('all',this)">
+
+        All
+
+    </button>
+
+    <button class="filter-btn"
+
+            onclick="filterTests('pass',this)">
+
+        Pass
+
+    </button>
+
+    <button class="filter-btn"
+
+            onclick="filterTests('fail',this)">
+
+        Fail
+
+    </button>
+
+    <button class="filter-btn"
+
+            onclick="filterTests('skip',this)">
+
+        Skip
+
+    </button>
+
+</section>
+
+{% if not report.classes %}
+<section class="no-test-data">
+    <div class="message-box">
+        <h2>No parsed test data found</h2>
+        <p>{{ report.note or 'The uploaded file did not contain any recognized test case results.' }}</p>
+    </div>
+</section>
+{% endif %}
+
+
+<!-- ====================================================== -->
+<!-- REPORT BODY -->
+<!-- ====================================================== -->
+
+<div class="content">
+
+{% for cls in report.classes %}
+
+<div class="class-box">
+
+    <!-- CLASS HEADER -->
+
+    <div class="class-header"
+
+         onclick="toggleClass(this)">
+
+        <span class="arrow">
+
+            ▼
+
+        </span>
+
+        <span class="classname">
+
+            {{ cls.short_name }}
+
+        </span>
+
+        <span class="badge pass">
+
+            {{ cls.passed }} Passed
+
+        </span>
+
+        {% if cls.failed > 0 %}
+
+        <span class="badge fail">
+
+            {{ cls.failed }} Failed
+
+        </span>
+
+        {% endif %}
+
+        {% if cls.skipped > 0 %}
+
+        <span class="badge skip">
+
+            {{ cls.skipped }} Skipped
+
+        </span>
+
+        {% endif %}
+
+        <span class="time">
+
+            {{ cls.time }} s
+
+        </span>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="class-body">
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>Status</th>
+
+                <th>Function</th>
+
+                <th>Time</th>
+
+                <th>Details</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for test in cls.tests %}
+
+            <tr
+
+                    class="test-row"
+
+                    data-status="{{ test.status }}"
+
+                    data-name="{{ test.name|lower }}">
+
+                <td>
+
+                    {% if test.status=="pass" %}
+
+                    <span class="status pass">
+
+                        PASS
+
+                    </span>
+
+                    {% elif test.status=="fail" %}
+
+                    <span class="status fail">
+
+                        FAIL
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="status skip">
+
+                        SKIP
+
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {{ test.name }}
+
+                </td>
+
+                <td>
+
+                    {{ test.time }}
+
+                </td>
+
+                <td>
+
+                    {% if test.message or test.stacktrace %}
+
+                    <button
+
+                            class="details-btn"
+
+                            onclick="toggleFailure(this)">
+
+                        Show Details
+
+                    </button>
+
+                    {% else %}
+
+                    —
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+
+            <!-- ======================================= -->
+            <!-- FAILURE DETAILS -->
+            <!-- ======================================= -->
+
+            {% if test.message or test.stacktrace %}
+
+            <tr
+
+                    class="failure-row"
+
+                    style="display:none;">
+
+                <td colspan="4">
+
+                    <div class="failure-box">
+
+                        {% if test.message %}
+
+                        <h4>
+
+                            Failure Message
+
+                        </h4>
+
+                        <pre>
+
+{{ test.message }}
+
+                        </pre>
+
+                        {% endif %}
+
+                        {% if test.stacktrace %}
+
+                        <h4>
+
+                            Stack Trace
+
+                        </h4>
+
+                        <pre>
+
+{{ test.stacktrace }}
+
+                        </pre>
+
+                        {% endif %}
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% endif %}
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/report.js') }}"></script>
+
+</body>
+
+</html>

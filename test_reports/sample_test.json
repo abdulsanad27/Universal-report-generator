@@ -1,0 +1,35 @@
+{
+  "testSuite": "JSON Test Suite",
+  "tests": 4,
+  "passed": 3,
+  "failed": 1,
+  "skipped": 0,
+  "timestamp": "2026-07-08T10:00:00",
+  "testCases": [
+    {
+      "name": "testJsonExample1",
+      "className": "com.example.JsonTests",
+      "status": "passed",
+      "time": 0.5
+    },
+    {
+      "name": "testJsonExample2",
+      "className": "com.example.JsonTests",
+      "status": "failed",
+      "time": 0.3,
+      "message": "Assertion error"
+    },
+    {
+      "name": "testJsonExample3",
+      "className": "com.example.OtherJsonTests",
+      "status": "passed",
+      "time": 0.2
+    },
+    {
+      "name": "testJsonExample4",
+      "className": "com.example.OtherJsonTests",
+      "status": "passed",
+      "time": 0.4
+    }
+  ]
+}

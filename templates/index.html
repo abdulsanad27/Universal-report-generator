@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Universal Test Report Analyzer</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Segoe UI",sans-serif;
+        }
+
+        body{
+
+            background:#f4f7fb;
+
+            min-height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+        }
+
+        .container{
+
+            width:700px;
+
+            background:white;
+
+            border-radius:15px;
+
+            box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+            overflow:hidden;
+
+        }
+
+        .header{
+
+            background:#1565C0;
+
+            color:white;
+
+            padding:30px;
+
+            text-align:center;
+
+        }
+
+        .header h1{
+
+            font-size:30px;
+
+        }
+
+        .header p{
+
+            margin-top:8px;
+
+            opacity:.9;
+
+        }
+
+        .body{
+
+            padding:35px;
+
+        }
+
+        .upload-box{
+
+            border:3px dashed #1565C0;
+
+            border-radius:10px;
+
+            padding:45px;
+
+            text-align:center;
+
+            transition:.3s;
+
+            cursor:pointer;
+
+        }
+
+        .upload-box:hover{
+
+            background:#f7fbff;
+
+        }
+
+        .upload-box.drag{
+
+            background:#e3f2fd;
+
+        }
+
+        .upload-icon{
+
+            font-size:60px;
+
+        }
+
+        .upload-title{
+
+            margin-top:15px;
+
+            font-size:22px;
+
+            font-weight:bold;
+
+        }
+
+        .upload-sub{
+
+            margin-top:10px;
+
+            color:#666;
+
+        }
+
+        input[type=file]{
+
+            display:none;
+
+        }
+
+        .filename{
+
+            margin-top:20px;
+
+            color:#1565C0;
+
+            font-weight:bold;
+
+        }
+
+        .upload-btn{
+
+            width:100%;
+
+            margin-top:25px;
+
+            padding:15px;
+
+            border:none;
+
+            background:#1565C0;
+
+            color:white;
+
+            font-size:17px;
+
+            border-radius:8px;
+
+            cursor:pointer;
+
+            transition:.3s;
+
+        }
+
+        .upload-btn:hover{
+
+            background:#0d47a1;
+
+        }
+
+        .supported{
+
+            margin-top:30px;
+
+        }
+
+        .supported h3{
+
+            margin-bottom:10px;
+
+        }
+
+        .tags{
+
+            display:flex;
+
+            flex-wrap:wrap;
+
+            gap:10px;
+
+        }
+
+        .tag{
+
+            background:#E3F2FD;
+
+            color:#1565C0;
+
+            padding:8px 15px;
+
+            border-radius:20px;
+
+            font-size:14px;
+
+            font-weight:bold;
+
+        }
+
+        .flash{
+
+            margin-bottom:20px;
+
+            padding:12px;
+
+            background:#ffebee;
+
+            color:#c62828;
+
+            border-radius:6px;
+
+        }
+
+        footer{
+
+            text-align:center;
+
+            color:#777;
+
+            font-size:13px;
+
+            margin-top:30px;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>Universal Test Report Analyzer</h1>
+
+<p>Upload XML, JSON, TXT, LOG or HTML Test Reports</p>
+
+</div>
+
+<div class="body">
+
+{% with messages = get_flashed_messages() %}
+
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="flash">
+
+{{ message }}
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+{% endwith %}
+
+<form
+
+action="/upload"
+
+method="POST"
+
+enctype="multipart/form-data"
+
+id="uploadForm"
+
+>
+
+<label
+
+for="report_file"
+
+class="upload-box"
+
+id="dropArea"
+
+>
+
+<div class="upload-icon">
+
+📄
+
+</div>
+
+<div class="upload-title">
+
+Choose Report File
+
+</div>
+
+<div class="upload-sub">
+
+Click here or Drag & Drop
+
+</div>
+
+<div
+
+class="filename"
+
+id="filename"
+
+>
+
+No file selected
+
+</div>
+
+</label>
+
+<input
+
+type="file"
+
+name="report_file"
+
+id="report_file"
+
+required
+
+>
+
+<button
+
+class="upload-btn"
+
+type="submit"
+
+>
+
+Analyze Report
+
+</button>
+
+</form>
+
+<div class="supported">
+
+<h3>
+
+Supported Formats
+
+</h3>
+
+<div class="tags">
+
+<div class="tag">XML</div>
+
+<div class="tag">JSON</div>
+
+<div class="tag">TXT</div>
+
+<div class="tag">LOG</div>
+
+<div class="tag">HTML</div>
+
+</div>
+
+</div>
+
+<footer>
+
+Version 2.0
+
+</footer>
+
+</div>
+
+</div>
+
+<script>
+
+const input=document.getElementById("report_file");
+
+const filename=document.getElementById("filename");
+
+const drop=document.getElementById("dropArea");
+
+drop.addEventListener("click",()=>{
+
+input.click();
+
+});
+
+input.addEventListener("change",()=>{
+
+if(input.files.length>0){
+
+filename.innerHTML=input.files[0].name;
+
+}
+
+});
+
+drop.addEventListener("dragover",(e)=>{
+
+e.preventDefault();
+
+drop.classList.add("drag");
+
+});
+
+drop.addEventListener("dragleave",()=>{
+
+drop.classList.remove("drag");
+
+});
+
+drop.addEventListener("drop",(e)=>{
+
+e.preventDefault();
+
+drop.classList.remove("drag");
+
+input.files=e.dataTransfer.files;
+
+filename.innerHTML=input.files[0].name;
+
+});
+
+</script>
+
+</body>
+
+</html>
