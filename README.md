@@ -50,7 +50,9 @@ A professional desktop application for analyzing and generating HTML reports fro
 
 ```bash
 # Clone or navigate to project directory
-cd /path/to/UVSL_report_gen
+git clone https://github.com/abdulsanad27/Universal-report-generator.git
+
+cd Universal-report-generator
 
 # Create virtual environment (if not present)
 python3 -m venv venv
@@ -71,7 +73,7 @@ pip install -r requirements.txt
 source venv/bin/activate
 
 # Run the application
-python3 main.py
+python3 python3 universal_report_analyzer.py
 ```
 
 ### Basic Workflow
@@ -83,7 +85,7 @@ python3 main.py
 2. **Select Report Files**
    - Option A: Drag & Drop files onto the window
    - Option B: Click "Browse Files" button
-   - Select one or multiple report files
+   - Select one 
    - Files will appear in the "Selected Files" list
 
 3. **Generate Report**
