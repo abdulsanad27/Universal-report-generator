@@ -294,38 +294,7 @@ python3 main.py
 3. Check file permissions (readable)
 4. Test with sample files in `test_reports/`
 
-## Performance
 
-- **File Size**: Tested up to 20 MB
-- **Processing Time**: Depends on file complexity
-- **UI Responsiveness**: Maintained via threading
-- **Memory Usage**: Reasonable for typical report files
-
-## System Requirements
-
-### Minimum
-
-- Ubuntu 22.04 LTS
-- Python 3.8+
-- 512 MB RAM
-- 100 MB disk space
-
-### Recommended
-
-- Ubuntu 24.04 LTS
-- Python 3.10+
-- 2 GB RAM
-- 500 MB disk space
-
-## License
-
-Internal project - Android Automotive Engineering Tools
-
-## Support
-
-For issues or questions, contact the development team.
-
----
 
 **Version**: 2.0  
 **Last Updated**: 2026-07-08  
