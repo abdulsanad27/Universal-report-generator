@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Android Automotive CTS" timestamp="2026-08-02T09:15:42Z">
+  <testsuite name="CarSettingsUnitTests" package="com.android.car.settings" tests="5">
+    <testcase classname="com.android.car.settings.bluetooth.BluetoothUtilsTest" name="testClearCache" time="0.042" result="passed" />
+    <testcase classname="com.android.car.settings.bluetooth.BluetoothUtilsTest" name="testUpdateCache" time="0.118" result="failed">
+      <failure type="java.lang.AssertionError" message="Expected cached device count &lt;3&gt; but was &lt;2&gt;">java.lang.AssertionError: Expected cached device count &lt;3&gt; but was &lt;2&gt;
+    at com.android.car.settings.bluetooth.BluetoothUtilsTest.testUpdateCache(BluetoothUtilsTest.java:142)
+Caused by: android.os.RemoteException: Car service disconnected</failure>
+      <system-out>I/CarService: reconnecting service
+W/BluetoothUtils: stale cache observed</system-out>
+      <system-err>Instrumentation run on emulator-5554</system-err>
+    </testcase>
+    <testcase classname="com.android.car.settings.user.UserProfileTest" name="testGuestRestriction" time="0.009">
+      <error type="java.lang.IllegalStateException" message="UserManager was null">java.lang.IllegalStateException: UserManager was null
+    at com.android.car.settings.user.UserProfileTest.testGuestRestriction(UserProfileTest.kt:77)</error>
+    </testcase>
+    <testcase classname="com.android.car.settings.user.UserProfileTest" name="testJapaneseDriverName" time="0.012" status="completed" />
+    <testcase classname="com.android.car.settings.user.UserProfileTest" name="testPassengerMode" time="0" status="ignored"><skipped message="Requires passenger display" /></testcase>
+  </testsuite>
+  <testsuite name="NestedModule">
+    <testsuite name="CarMediaTests">
+      <testcase classname="com.android.car.media.MediaSourceTest" name="testSourceDisabled" time="0" status="disabled" />
+      <testcase classname="com.android.car.media.MediaSourceTest" name="testNotRunAfterAbort" time="0" status="notrun" />
+      <testcase classname="com.android.car.media.MediaSourceTest" name="testAccentName_Ångström" time="0.031" result="SUCCESS" />
+    </testsuite>
+  </testsuite>
+</testsuites>

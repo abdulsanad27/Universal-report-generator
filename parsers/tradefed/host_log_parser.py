@@ -1,207 +1,118 @@
+"""Stateful, multi-layout parser for TradeFed host logs."""
+
 import re
+from collections import OrderedDict
 
 from parsers.base_parser import BaseParser
 
-from models.report import Report
-from models.class_result import ClassResult
-from models.test_result import TestResult
-
 
 class HostLogParser(BaseParser):
-    """
-    Parses TradeFed host_log.txt and similar summary logs.
-    Extracts execution metadata and summary details.
-    """
-
-    START_PATTERN = re.compile(
-        r"Starting invocation",
-        re.IGNORECASE
-    )
-
-    END_PATTERN = re.compile(
-        r"Invocation finished|End of Results|Cleaning up builds",
-        re.IGNORECASE
-    )
-
-    DEVICE_PATTERN = re.compile(
-        r"device[:=]\s*(.*)",
-        re.IGNORECASE
-    )
-
-    MODULE_PATTERN = re.compile(
-        r"module[:=]\s*(.*)",
-        re.IGNORECASE
-    )
-
-    BUILD_PATTERN = re.compile(
-        r"build[:=]\s*(.*)",
-        re.IGNORECASE
-    )
-
-    ERROR_PATTERN = re.compile(
-        r"(ERROR|EXCEPTION|FATAL)",
-        re.IGNORECASE
-    )
-
-    WARNING_PATTERN = re.compile(
-        r"(WARN|WARNING)",
-        re.IGNORECASE
-    )
-
-    SUMMARY_TOTAL_PATTERN = re.compile(r"Total Tests\s*:\s*(\d+)", re.IGNORECASE)
-    SUMMARY_PASSED_PATTERN = re.compile(r"PASSED\s*:\s*(\d+)", re.IGNORECASE)
-    SUMMARY_FAILED_PATTERN = re.compile(r"FAILED\s*:\s*(\d+)", re.IGNORECASE)
-    SUMMARY_IGNORED_PATTERN = re.compile(r"IGNORED\s*:\s*(\d+)", re.IGNORECASE)
-    TEST_STARTED_PATTERN = re.compile(r"ModuleListener\.testStarted\((.+?)#(.+)\)", re.IGNORECASE)
-    TEST_RESULT_PATTERN = re.compile(r"\[(\d+)/(\d+)\]\s+.*?\s+(.+?)#(.+)\s+(PASSED|FAILED|SKIPPED|IGNORED)", re.IGNORECASE)
-    MODULE_NAME_PATTERN = re.compile(r"([A-Za-z0-9_.-]+)\s*:\s*\d+", re.IGNORECASE)
+    _INVOCATION_START = re.compile(r"\bstarting invocation\b", re.I)
+    _INVOCATION_END = re.compile(r"\b(?:invocation (?:finished|ended)|end of results|cleaning up builds)\b", re.I)
+    _META = {"device": re.compile(r"\bdevice\s*[:=]\s*(.+)", re.I),
+             "module": re.compile(r"\bmodule\s*[:=]\s*(.+)", re.I),
+             "build": re.compile(r"\bbuild\s*[:=]\s*(.+)", re.I)}
+    _STARTS = (re.compile(r"\b(?:modulelistener\.)?testStarted\((?P<class>[\w.$]+)#(?P<method>[\w$<>-]+)\)", re.I),
+               re.compile(r"\btest[_ ]started\s*[:(]\s*(?P<class>[\w.$]+)#(?P<method>[\w$<>-]+)", re.I))
+    _RESULTS = (re.compile(r"(?:\[\d+\s*/\s*\d+\]\s+)?(?P<class>[\w.$]+)#(?P<method>[\w$<>-]+).*?\b(?P<status>PASSED|PASS|SUCCESS|OK|FAILED|FAILURE|FAIL|ERROR|EXCEPTION|TIMEOUT|ABORTED|SKIPPED|IGNORED|DISABLED|NOTRUN)\b", re.I),
+                re.compile(r"\btest(?:Ended|_ended|Result)\s*\(?(?P<class>[\w.$]+)#(?P<method>[\w$<>-]+).*?(?:status|result)\s*[:=]\s*(?P<status>[\w -]+)", re.I))
+    _FAILURE_EVENT = re.compile(r"\b(?:testFailed|test_failure|test_assumption_failure)\s*\(?(?P<class>[\w.$]+)#(?P<method>[\w$<>-]+)?", re.I)
+    _SUMMARY = re.compile(r"\b(?P<name>total(?:\s+tests?)?|passed|failed|failures?|skipped|ignored|disabled)\s*[:=]\s*(?P<count>\d+)", re.I)
+    _TIME = re.compile(r"\b(?:time|duration|elapsed)\s*[:=]\s*(\d+(?:\.\d+)?)", re.I)
+    _DIAGNOSTIC = re.compile(r"(?:exception|assertion|caused by:|\bat\s+[\w.$]+\(|\bfatal\b|\berror\b|\bfailure\b)", re.I)
 
     def parse(self, file_bytes):
-
-        text = self.decode_file(file_bytes)
-
-        report = Report()
-
-        report.report_type = "tradefed_host"
-
-        report.suite_name = "TradeFed Host Log"
-
-        info = report.run_information
-
-        total_tests = 0
-        passed = 0
-        failed = 0
-        ignored = 0
-        summary_class = None
-        classes = {}
-        current_test = None
-
-        for line in text.splitlines():
-
-            line = line.strip()
-
-            if not line:
+        report = self.create_report("tradefed_host", "TradeFed Host Log")
+        classes, active, extracted = OrderedDict(), None, 0
+        summaries = {"total": 0, "passed": 0, "failed": 0, "skipped": 0}
+        for raw in self.decode_file(file_bytes).splitlines():
+            line = raw.rstrip()
+            if not line.strip():
                 continue
-
-            if self.START_PATTERN.search(line):
-                info.started = True
-
-            if self.END_PATTERN.search(line):
-                info.finished = True
-
-            match = self.DEVICE_PATTERN.search(line)
-            if match:
-                info.device = match.group(1).strip()
-
-            match = self.MODULE_PATTERN.search(line)
-            if match:
-                info.module = match.group(1).strip()
-
-            match = self.BUILD_PATTERN.search(line)
-            if match:
-                info.build = match.group(1).strip()
-
-            total_match = self.SUMMARY_TOTAL_PATTERN.search(line)
-            if total_match:
-                total_tests = int(total_match.group(1))
-                report.summary_total = total_tests
-                info.information.append(f"Total Tests: {total_tests}")
-
-            passed_match = self.SUMMARY_PASSED_PATTERN.search(line)
-            if passed_match:
-                passed = int(passed_match.group(1))
-                report.summary_passed = passed
-                info.information.append(f"Passed: {passed}")
-
-            failed_match = self.SUMMARY_FAILED_PATTERN.search(line)
-            if failed_match:
-                failed = int(failed_match.group(1))
-                report.summary_failed = failed
-                info.information.append(f"Failed: {failed}")
-
-            ignored_match = self.SUMMARY_IGNORED_PATTERN.search(line)
-            if ignored_match:
-                ignored = int(ignored_match.group(1))
-                report.summary_skipped = ignored
-                info.information.append(f"Ignored: {ignored}")
-
-            started_match = self.TEST_STARTED_PATTERN.search(line)
-            if started_match:
-                class_name = started_match.group(1).split('.')[-1]
-                test_name = started_match.group(2)
-                if class_name not in classes:
-                    classes[class_name] = ClassResult(name=class_name)
-                current_test = TestResult(
-                    name=test_name,
-                    classname=class_name,
-                    status="pass",
-                    time=0.0,
-                    message="",
-                    stacktrace=""
-                )
-                classes[class_name].add_test(current_test)
+            report.run_information.started |= bool(self._INVOCATION_START.search(line))
+            report.run_information.finished |= bool(self._INVOCATION_END.search(line))
+            self._metadata(report, line)
+            self._summary(line, summaries)
+            result = self._match(self._RESULTS, line)
+            if result:
+                active = self._new_test(classes, result.group("class"), result.group("method"), result.group("status"), line)
+                extracted += 1
                 continue
-
-            result_match = self.TEST_RESULT_PATTERN.search(line)
-            if result_match and current_test:
-                status = result_match.group(5).lower()
-                if status in ["passed", "failed", "skipped", "ignored"]:
-                    current_test.status = "pass" if status == "passed" else "fail" if status == "failed" else "skip"
-                    if status == "ignored":
-                        current_test.status = "skip"
-                    current_test.time = 0.0
-                    current_test.message = line.strip()
+            failure = self._FAILURE_EVENT.search(line)
+            if failure:
+                active = self._new_test(classes, failure.group("class"), failure.group("method") or "Unknown Test", "failure", line)
+                extracted += 1
                 continue
+            started = self._match(self._STARTS, line)
+            if started:
+                active = self._new_test(classes, started.group("class"), started.group("method"), "pass", line)
+                extracted += 1
+                continue
+            if active is not None:
+                self._append_context(active, line)
+            if self._DIAGNOSTIC.search(line):
+                report.run_information.errors.append(line)
+            elif re.search(r"\b(?:warn|warning)\b", line, re.I):
+                report.run_information.warnings.append(line)
 
-            if self.ERROR_PATTERN.search(line):
-                info.errors.append(line)
+        for class_result in classes.values():
+            report.add_class(class_result)
+        self._apply_summary(report, summaries, extracted)
+        report.has_test_data = bool(extracted)
+        report.parsing_metadata["extraction_statistics"] = {
+            "strategy": "host_lifecycle_inline_and_summary", "test_records": extracted,
+            "classes_extracted": len(classes), "summary": dict(summaries),
+        }
+        if not extracted:
+            report.note = "This log contains invocation metadata but no recoverable test cases."
+            self.add_diagnostic(report, "missing_fields", "No per-test result records found.")
+        return self.finalize_report(report)
 
-            if self.WARNING_PATTERN.search(line):
-                info.warnings.append(line)
+    def _new_test(self, classes, classname, method, status, line):
+        classname = self.clean_text(classname, "UnknownClass")
+        test = self.create_test(method, classname, status, self._time(line), message="", stacktrace="")
+        classes.setdefault(classname, self.create_class(classname)).add_test(test)
+        return test
 
-        for cls in classes.values():
-            report.add_class(cls)
+    def _metadata(self, report, line):
+        for attribute, pattern in self._META.items():
+            match = pattern.search(line)
+            if match:
+                setattr(report.run_information, attribute, match.group(1).strip())
 
-        if report.classes:
-            report.has_test_data = True
+    def _summary(self, line, summaries):
+        for match in self._SUMMARY.finditer(line):
+            name, count = match.group("name").lower(), self.safe_int(match.group("count"))
+            key = "total" if name.startswith("total") else "failed" if name.startswith("fail") else "skipped" if name in {"skipped", "ignored", "disabled"} else "passed"
+            summaries[key] = count
 
-        if total_tests or passed or failed or ignored:
-            report.summary_total = total_tests
-            report.summary_passed = passed
-            report.summary_failed = failed
-            report.summary_skipped = ignored
+    def _apply_summary(self, report, summaries, extracted):
+        report.summary_total = summaries["total"]
+        report.summary_passed = summaries["passed"]
+        report.summary_failed = summaries["failed"]
+        report.summary_skipped = summaries["skipped"]
+        parsed = {"total": report.total if not summaries["total"] else extracted,
+                  "passed": sum(t.status == "pass" for c in report.classes for t in c.tests),
+                  "failed": sum(t.status == "fail" for c in report.classes for t in c.tests),
+                  "skipped": sum(t.status == "skip" for c in report.classes for t in c.tests)}
+        if extracted and summaries["total"] and summaries["total"] != extracted:
+            self.add_diagnostic(report, "warnings", f"Summary total ({summaries['total']}) differs from extracted records ({extracted}).")
+        if not summaries["total"] and extracted:
+            report.summary_total = 0  # Report model derives all statistics from parsed tests.
 
-            summary_class = ClassResult(name="TradeFed Summary")
-            summary_test = TestResult(
-                name="Execution Summary",
-                classname="TradeFed Summary",
-                status="pass" if failed == 0 else "fail",
-                time=0.0,
-                message=(
-                    f"Total Tests: {total_tests}\n"
-                    f"Passed: {passed}\n"
-                    f"Failed: {failed}\n"
-                    f"Ignored: {ignored}"
-                ),
-                stacktrace=""
-            )
-            summary_class.add_test(summary_test)
-            report.add_class(summary_class)
+    def _append_context(self, test, line):
+        test.logs.append(line)
+        if self._DIAGNOSTIC.search(line):
+            if not test.message:
+                test.message = line.strip()
+            test.stacktrace = (test.stacktrace + "\n" + line.strip()).strip()
+            if test.status == "pass":
+                test.status = self.normalize_status("error")
 
-        if not report.classes:
-            report.note = "This log file does not contain any parsed test-case data."
-            fallback_class = ClassResult(name="TradeFed Host Log")
-            fallback_test = TestResult(
-                name="Execution Summary",
-                classname="TradeFed Host Log",
-                status="pass",
-                time=0.0,
-                message="No per-test data was found in this log file.",
-                stacktrace=""
-            )
-            fallback_class.add_test(fallback_test)
-            report.add_class(fallback_class)
+    @classmethod
+    def _match(cls, patterns, line):
+        return next((match for pattern in patterns if (match := pattern.search(line))), None)
 
-        report.sort_classes()
-
-        return report
+    def _time(self, line):
+        match = self._TIME.search(line)
+        return match.group(1) if match else 0

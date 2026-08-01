@@ -1,0 +1,19 @@
+{
+  "fixture_version": 1,
+  "purpose": "Permanent Android Automotive parser regression corpus",
+  "fixtures": [
+    {"file": "junit_nested_mixed.xml", "family": "xml", "minimum_tests": 8, "scenarios": ["nested suites", "failure", "error", "ignored", "disabled", "unicode", "system streams"]},
+    {"file": "junit_truncated_recovery.xml", "family": "xml", "minimum_tests": 2, "scenarios": ["malformed XML", "fragment recovery", "unexpected EOF"]},
+    {"file": "tradefed_host_retry_timeout.log", "family": "tradefed_host", "minimum_tests": 7, "scenarios": ["retries", "timeout", "aborted", "wrapped stacktrace", "summary"]},
+    {"file": "tradefed_host_partial.log", "family": "tradefed_host", "minimum_tests": 2, "scenarios": ["partial invocation", "EOF while failing"]},
+    {"file": "tradefed_events_multiline.log", "family": "tradefed_event", "minimum_tests": 5, "scenarios": ["event records", "module", "root cause", "exception", "ignored"]},
+    {"file": "tradefed_events_legacy.log", "family": "tradefed_event", "minimum_tests": 2, "scenarios": ["legacy lifecycle", "alternative labels"]},
+    {"file": "automotive_flat_results.json", "family": "json", "minimum_tests": 6, "scenarios": ["flat schema", "failure object", "timeout", "unicode"]},
+    {"file": "automotive_nested_results.json", "family": "json", "minimum_tests": 5, "scenarios": ["nested schema", "extra fields", "system output"]},
+    {"file": "broken_embedded_cases.json", "family": "json", "minimum_tests": 2, "scenarios": ["corrupt envelope", "object recovery"]},
+    {"file": "dashboard_export_mixed.html", "family": "html", "minimum_tests": 5, "scenarios": ["DOM tables", "mixed status", "multiline failure"]},
+    {"file": "generic_mixed_layouts.txt", "family": "generic_txt", "minimum_tests": 7, "scenarios": ["status first", "status last", "columns", "milliseconds", "wrapped exception"]},
+    {"file": "duplicates_and_retries.txt", "family": "generic_txt", "minimum_tests": 4, "scenarios": ["same-status duplicates", "different-status retry", "deduplication"]},
+    {"file": "stress_tradefed_host.log", "family": "tradefed_host", "minimum_tests": 40, "scenarios": ["large report", "multiple modules", "repeated records", "mixed outcomes"]}
+  ]
+}

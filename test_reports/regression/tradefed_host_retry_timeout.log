@@ -1,0 +1,18 @@
+08-02 09:10:01 I/TestInvocation: Starting invocation for car-module-tests
+08-02 09:10:02 I/ConfigurationFactory: TradeFed 12.4 device: emulator-5554 build: aosp_car_x86_64-userdebug
+08-02 09:10:03 I/ModuleListener: module: CtsCarServiceTestCases
+08-02 09:10:04 I/ModuleListener: ModuleListener.testStarted(com.android.car.service.PowerPolicyTest#testPolicyApplied)
+08-02 09:10:04 I/ModuleListener: [1/7] com.android.car.service.PowerPolicyTest#testPolicyApplied PASSED duration=0.314
+08-02 09:10:05 I/ModuleListener: ModuleListener.testStarted(com.android.car.service.PowerPolicyTest#testGarageMode)
+08-02 09:10:07 E/ModuleListener: java.lang.AssertionError: Expected garage mode enabled after ignition off
+08-02 09:10:07 E/ModuleListener:     at com.android.car.service.PowerPolicyTest.testGarageMode(PowerPolicyTest.java:188)
+08-02 09:10:07 E/ModuleListener: Caused by: android.car.CarNotConnectedException: service binder died
+08-02 09:10:08 I/ModuleListener: [2/7] com.android.car.service.PowerPolicyTest#testGarageMode FAILED duration=2.441
+08-02 09:10:09 I/ModuleListener: [3/7] com.android.car.service.PowerPolicyTest#testGarageMode PASSED duration=0.501 retry=1
+08-02 09:10:10 I/ModuleListener: [4/7] com.android.car.service.UserLifecycleTest#testSwitchUser TIMEOUT duration=300.000
+08-02 09:10:10 E/ModuleListener: java.util.concurrent.TimeoutException: switch callback exceeded 300 seconds
+08-02 09:10:11 I/ModuleListener: [5/7] com.android.car.service.UserLifecycleTest#testHeadlessMode IGNORED reason=not supported on device
+08-02 09:10:12 I/ModuleListener: [6/7] com.android.car.service.DisplayTest#testPassengerDisplay DISABLED
+08-02 09:10:13 I/ModuleListener: [7/7] com.android.car.service.DisplayTest#testDisplayRecovery ABORTED duration=4.112
+08-02 09:10:14 I/TestInvocation: Total Tests: 7 Passed: 2 Failed: 3 Ignored: 2
+08-02 09:10:14 I/TestInvocation: Invocation finished

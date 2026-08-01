@@ -44,16 +44,11 @@ class TradeFedConfigParser(BaseParser):
                     if filters:
                         info.information.append("Global filters: " + ", ".join(filters))
 
-        fallback_class = ClassResult(name="TradeFed Configuration")
-        fallback_test = TestResult(
-            name="Configuration Metadata",
-            classname="TradeFed Configuration",
-            status="pass",
-            time=0.0,
-            message="No test-case results were found in this configuration XML file.",
-            stacktrace=""
-        )
+        fallback_class = self.create_class("TradeFed Configuration")
+        fallback_test = self.create_test(
+            "Configuration Metadata", "TradeFed Configuration", "pass", 0.0,
+            message="No test-case results were found in this configuration XML file.")
         fallback_class.add_test(fallback_test)
         report.add_class(fallback_class)
 
-        return report
+        return self.finalize_report(report)

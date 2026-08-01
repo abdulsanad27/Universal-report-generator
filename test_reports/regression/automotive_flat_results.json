@@ -1,0 +1,14 @@
+{
+  "testSuite": "Automotive Connectivity Regression",
+  "build": "aosp_car_arm64-userdebug",
+  "device": "PixelCar-01",
+  "timestamp": "2026-08-02T12:00:00Z",
+  "testCases": [
+    {"name": "testProjectionConnect", "className": "com.android.car.projection.ProjectionServiceTest", "status": "PASSED", "time": 0.441},
+    {"name": "testProjectionReconnect", "className": "com.android.car.projection.ProjectionServiceTest", "status": "FAILURE", "time": 2.115, "message": "Reconnect callback was never received", "stacktrace": "java.lang.AssertionError: Reconnect callback was never received\n    at com.android.car.projection.ProjectionServiceTest.testProjectionReconnect(ProjectionServiceTest.java:204)\nCaused by: java.util.concurrent.TimeoutException: callback timed out", "system_out": "I/Projection: disconnecting USB transport"},
+    {"name": "testProjectionTimeout", "className": "com.android.car.projection.ProjectionServiceTest", "status": "TIMEOUT", "time": 120.0, "message": "Instrumentation timeout", "exception": "java.util.concurrent.TimeoutException"},
+    {"name": "testWifiDisabled", "className": "com.android.car.wifi.CarWifiTest", "status": "IGNORED", "time": 0, "message": "Wi-Fi hardware is absent"},
+    {"name": "testDriverName_日本語", "className": "com.android.car.user.DriverProfileTest", "status": "SUCCESS", "time": 0.087},
+    {"name": "testAbortDuringShutdown", "className": "com.android.car.user.DriverProfileTest", "status": "ABORTED", "time": 3.1, "message": "Vehicle power state changed during test"}
+  ]
+}

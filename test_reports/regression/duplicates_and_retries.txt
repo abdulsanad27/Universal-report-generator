@@ -1,0 +1,8 @@
+PASS com.android.car.audio.VolumeTest#testVolumeUp 0.020
+PASS com.android.car.audio.VolumeTest#testVolumeUp 0.030
+FAIL com.android.car.audio.VolumeTest#testMute 0.080
+java.lang.AssertionError: mute state not reported
+FAIL com.android.car.audio.VolumeTest#testMute 0.100
+PASS com.android.car.audio.VolumeTest#testMute 0.040 retry=1
+SKIP com.android.car.audio.VolumeTest#testExternalAmp 0
+SKIP com.android.car.audio.VolumeTest#testExternalAmp 0

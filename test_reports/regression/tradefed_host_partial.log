@@ -1,0 +1,6 @@
+08-02 11:00:00 I/TestInvocation: Starting invocation
+08-02 11:00:01 I/ModuleListener: module: CarSystemUiTests
+08-02 11:00:02 I/ModuleListener: ModuleListener.testStarted(com.android.systemui.car.volume.VolumeDialogTest#testMute)
+08-02 11:00:02 E/ModuleListener: java.lang.IllegalStateException: audio service unavailable
+08-02 11:00:02 E/ModuleListener:     at com.android.systemui.car.volume.VolumeDialogTest.testMute(VolumeDialogTest.java:63)
+08-02 11:00:03 I/ModuleListener: [1/2] com.android.systemui.car.volume.VolumeDialogTest#testUnmute SUCCESS duration=0.122

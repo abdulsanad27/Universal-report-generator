@@ -77,7 +77,4 @@ class PassedTestsParser(BaseParser):
 
             report.add_class(cls)
 
-        report.sort_classes()
-
-        return report
-        
+        return self.finalize_report(report)

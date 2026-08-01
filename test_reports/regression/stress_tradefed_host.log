@@ -1,0 +1,50 @@
+08-02 14:00:00 I/TestInvocation: Starting invocation TradeFed 12.4
+08-02 14:00:01 I/ModuleListener: module: CtsCarAudioTestCases
+08-02 14:00:02 I/ModuleListener: [1/40] com.android.car.audio.AudioTest#testVolume01 PASSED duration=0.011
+08-02 14:00:02 I/ModuleListener: [2/40] com.android.car.audio.AudioTest#testVolume02 PASSED duration=0.012
+08-02 14:00:02 I/ModuleListener: [3/40] com.android.car.audio.AudioTest#testVolume03 PASSED duration=0.013
+08-02 14:00:02 I/ModuleListener: [4/40] com.android.car.audio.AudioTest#testVolume04 PASSED duration=0.014
+08-02 14:00:02 I/ModuleListener: [5/40] com.android.car.audio.AudioTest#testVolume05 FAILED duration=0.015
+08-02 14:00:02 E/ModuleListener: java.lang.AssertionError: volume group mismatch
+08-02 14:00:02 E/ModuleListener:     at com.android.car.audio.AudioTest.testVolume05(AudioTest.java:105)
+08-02 14:00:03 I/ModuleListener: [6/40] com.android.car.audio.AudioTest#testVolume06 PASSED duration=0.016
+08-02 14:00:03 I/ModuleListener: [7/40] com.android.car.audio.AudioTest#testVolume07 IGNORED
+08-02 14:00:03 I/ModuleListener: [8/40] com.android.car.audio.AudioTest#testVolume08 PASSED duration=0.018
+08-02 14:00:03 I/ModuleListener: [9/40] com.android.car.audio.AudioTest#testVolume09 PASSED duration=0.019
+08-02 14:00:03 I/ModuleListener: [10/40] com.android.car.audio.AudioTest#testVolume10 TIMEOUT duration=60.000
+08-02 14:00:04 I/ModuleListener: module: CtsCarUserTestCases
+08-02 14:00:04 I/ModuleListener: [11/40] com.android.car.user.UserTest#testUser11 PASSED duration=0.021
+08-02 14:00:04 I/ModuleListener: [12/40] com.android.car.user.UserTest#testUser12 PASSED duration=0.022
+08-02 14:00:04 I/ModuleListener: [13/40] com.android.car.user.UserTest#testUser13 PASSED duration=0.023
+08-02 14:00:04 I/ModuleListener: [14/40] com.android.car.user.UserTest#testUser14 DISABLED
+08-02 14:00:04 I/ModuleListener: [15/40] com.android.car.user.UserTest#testUser15 PASSED duration=0.025
+08-02 14:00:04 I/ModuleListener: [16/40] com.android.car.user.UserTest#testUser16 FAILED duration=0.026
+08-02 14:00:04 E/ModuleListener: Caused by: android.os.RemoteException: user service died
+08-02 14:00:05 I/ModuleListener: [17/40] com.android.car.user.UserTest#testUser17 PASSED duration=0.027
+08-02 14:00:05 I/ModuleListener: [18/40] com.android.car.user.UserTest#testUser18 PASSED duration=0.028
+08-02 14:00:05 I/ModuleListener: [19/40] com.android.car.user.UserTest#testUser19 ABORTED duration=1.000
+08-02 14:00:05 I/ModuleListener: [20/40] com.android.car.user.UserTest#testUser20 PASSED duration=0.030
+08-02 14:00:06 I/ModuleListener: module: CtsCarDisplayTestCases
+08-02 14:00:06 I/ModuleListener: [21/40] com.android.car.display.DisplayTest#testDisplay21 PASSED duration=0.031
+08-02 14:00:06 I/ModuleListener: [22/40] com.android.car.display.DisplayTest#testDisplay22 PASSED duration=0.032
+08-02 14:00:06 I/ModuleListener: [23/40] com.android.car.display.DisplayTest#testDisplay23 PASSED duration=0.033
+08-02 14:00:06 I/ModuleListener: [24/40] com.android.car.display.DisplayTest#testDisplay24 PASSED duration=0.034
+08-02 14:00:06 I/ModuleListener: [25/40] com.android.car.display.DisplayTest#testDisplay25 FAILED duration=0.035
+08-02 14:00:07 I/ModuleListener: [26/40] com.android.car.display.DisplayTest#testDisplay26 PASSED duration=0.036
+08-02 14:00:07 I/ModuleListener: [27/40] com.android.car.display.DisplayTest#testDisplay27 IGNORED
+08-02 14:00:07 I/ModuleListener: [28/40] com.android.car.display.DisplayTest#testDisplay28 PASSED duration=0.038
+08-02 14:00:07 I/ModuleListener: [29/40] com.android.car.display.DisplayTest#testDisplay29 PASSED duration=0.039
+08-02 14:00:07 I/ModuleListener: [30/40] com.android.car.display.DisplayTest#testDisplay30 PASSED duration=0.040
+08-02 14:00:08 I/ModuleListener: module: CtsCarPowerTestCases
+08-02 14:00:08 I/ModuleListener: [31/40] com.android.car.power.PowerTest#testPower31 PASSED duration=0.041
+08-02 14:00:08 I/ModuleListener: [32/40] com.android.car.power.PowerTest#testPower32 PASSED duration=0.042
+08-02 14:00:08 I/ModuleListener: [33/40] com.android.car.power.PowerTest#testPower33 PASSED duration=0.043
+08-02 14:00:08 I/ModuleListener: [34/40] com.android.car.power.PowerTest#testPower34 PASSED duration=0.044
+08-02 14:00:08 I/ModuleListener: [35/40] com.android.car.power.PowerTest#testPower35 TIMEOUT duration=60.000
+08-02 14:00:09 I/ModuleListener: [36/40] com.android.car.power.PowerTest#testPower36 PASSED duration=0.046
+08-02 14:00:09 I/ModuleListener: [37/40] com.android.car.power.PowerTest#testPower37 PASSED duration=0.047
+08-02 14:00:09 I/ModuleListener: [38/40] com.android.car.power.PowerTest#testPower38 DISABLED
+08-02 14:00:09 I/ModuleListener: [39/40] com.android.car.power.PowerTest#testPower39 PASSED duration=0.049
+08-02 14:00:09 I/ModuleListener: [40/40] com.android.car.power.PowerTest#testPower40 PASSED duration=0.050
+08-02 14:00:10 I/TestInvocation: Total Tests: 40 Passed: 30 Failed: 6 Ignored: 4
+08-02 14:00:10 I/TestInvocation: Invocation finished

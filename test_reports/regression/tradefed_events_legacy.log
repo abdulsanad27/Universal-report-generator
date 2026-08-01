@@ -1,0 +1,7 @@
+2026-08-02 10:00:00 module: CarUiUnitTests
+test_started(com.android.car.ui.FocusAreaTest#testInitialFocus)
+test_ended(com.android.car.ui.FocusAreaTest#testInitialFocus status=PASSED)
+test_started(com.android.car.ui.FocusAreaTest#testRotaryNavigation)
+java.lang.AssertionError: focus escaped panel
+    at com.android.car.ui.FocusAreaTest.testRotaryNavigation(FocusAreaTest.java:91)
+test_ended(com.android.car.ui.FocusAreaTest#testRotaryNavigation status=FAILED)

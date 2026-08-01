@@ -15,13 +15,7 @@ class HtmlParser(BaseParser):
 
         soup = BeautifulSoup(html, "html.parser")
 
-        report = Report()
-
-        report.report_type = "html"
-
-        report.suite_name = "HTML Test Report"
-
-        report.timestamp = ""
+        report = self.create_report("html", "HTML Test Report")
 
         current_class = ClassResult(
             name="HTML Report"
@@ -52,19 +46,13 @@ class HtmlParser(BaseParser):
 
                 text = " ".join(values).lower()
 
-                status = None
-
-                if "pass" in text:
-                    status = "pass"
-
-                elif "fail" in text:
-                    status = "fail"
-
-                elif "skip" in text:
-                    status = "skip"
-
-                if status is None:
+                raw_status = next((value for value in values if value.upper() in {
+                    "PASS", "PASSED", "SUCCESS", "OK", "TRUE", "FAIL", "FAILED", "FAILURE",
+                    "ERROR", "EXCEPTION", "ASSERTION", "TIMEOUT", "ABORTED",
+                    "SKIP", "SKIPPED", "IGNORED", "DISABLED", "NOTRUN"}), None)
+                if raw_status is None:
                     continue
+                status = self.normalize_status(raw_status)
 
                 name = values[1] if len(values) > 1 else "Unknown Test"
 
@@ -72,36 +60,18 @@ class HtmlParser(BaseParser):
 
                 if len(values) >= 3:
 
-                    try:
-                        execution_time = float(values[2])
-                    except:
-                        execution_time = 0
+                    execution_time = self.safe_float(values[2])
 
                 message = ""
 
                 if len(values) >= 4:
                     message = values[3]
 
-                test = TestResult(
-
-                    name=name,
-
-                    classname=current_class.name,
-
-                    status=status,
-
-                    time=execution_time,
-
-                    message=message,
-
-                    stacktrace=message
-
-                )
+                test = self.create_test(name, current_class.name, status, execution_time,
+                                        message=message, stacktrace=message)
 
                 current_class.add_test(test)
 
         report.add_class(current_class)
 
-        report.sort_classes()
-
-        return report
+        return self.finalize_report(report)

@@ -145,7 +145,7 @@ class JavaLogParser(BaseParser):
 
                 if self.EXCEPTION_PATTERN.match(line):
 
-                    current_test.status = "fail"
+                    current_test.status = self.normalize_status("exception")
 
                     current_test.message = line.strip()
 
@@ -219,6 +219,4 @@ class JavaLogParser(BaseParser):
 
             report.add_class(cls)
 
-        report.sort_classes()
-
-        return report
+        return self.finalize_report(report)

@@ -1,0 +1,16 @@
+{
+  "suite_name": "Car Settings Presubmit",
+  "timestamp": "2026-08-02T12:10:00Z",
+  "execution": {"runner": "atest", "shard": 2, "additionalMetadata": {"branch": "main"}},
+  "classes": [
+    {"name": "com.android.car.settings.sound.SoundSettingsTest", "tests": [
+      {"name": "testBalance", "status": "pass", "time": "0.020", "system_out": "I/AudioManager: balance=0"},
+      {"name": "testFade", "status": "Exception", "time": "0.180", "message": "Audio zone was unavailable", "stacktrace": "android.car.CarNotConnectedException: Audio zone was unavailable\n at com.android.car.settings.sound.SoundSettingsTest.testFade(SoundSettingsTest.java:74)", "root_cause": "binder disconnected"},
+      {"name": "testVolumeGroup", "status": "SKIPPED", "time": 0, "message": "requires multi-zone audio"}
+    ]},
+    {"name": "com.android.car.settings.display.DisplaySettingsTest", "tests": [
+      {"name": "testBrightness", "status": "OK", "time": 0.061},
+      {"name": "testNightMode", "status": "disabled", "time": 0, "additional_fields": {"featureFlag": "night_mode"}}
+    ]}
+  ]
+}

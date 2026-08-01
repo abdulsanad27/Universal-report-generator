@@ -1,0 +1,4 @@
+{"suite_name":"Corrupted result upload","testCases":[
+{"name":"testRecoveredFailure","className":"com.android.car.recovery.ParserTest","status":"FAILED","time":1.4,"message":"partial upload","stacktrace":"java.lang.AssertionError: partial upload\nCaused by: network reset"},
+{"name":"testRecoveredPass","className":"com.android.car.recovery.ParserTest","status":"PASSED","time":0.05}
+],"trailer": THIS_IS_NOT_JSON

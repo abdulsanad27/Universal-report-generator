@@ -1,171 +1,79 @@
+"""Structure-driven fallback parser for line-oriented test reports."""
+
+import re
 from collections import OrderedDict
 
 from .base_parser import BaseParser
 
-from models.report import Report
-from models.class_result import ClassResult
-from models.test_result import TestResult
-
 
 class GenericTXTParser(BaseParser):
+    _STATUS = r"PASS(?:ED)?|SUCCESS|OK|TRUE|FAIL(?:ED|URE)?|ERROR|EXCEPTION|ASSERTION|TIMEOUT|ABORTED|SKIP(?:PED)?|IGNORED|DISABLED|NOT[ _-]?RUN"
+    _STATUS_FIRST = re.compile(rf"^\s*(?P<status>{_STATUS})\b[\s:|,-]+(?P<test>[^|,\s]+)(?P<tail>.*)$", re.I)
+    _STATUS_LAST = re.compile(rf"(?P<test>[\w.$]+[#$][\w$<>-]+).*?\b(?P<status>{_STATUS})\b(?P<tail>.*)$", re.I)
+    _DELIMITED = re.compile(rf"^\s*(?P<class>[\w.$]+)\s*[|,;]\s*(?P<method>[\w$<>-]+)\s*[|,;]\s*(?P<status>{_STATUS})(?P<tail>.*)$", re.I)
+    _TIME = re.compile(r"(?:\b(?:time|duration|elapsed)\s*[:=]?\s*|\s)(\d+(?:\.\d+)?)\s*(?:ms|s|sec(?:onds)?)?\b", re.I)
+    _HEADING = re.compile(r"^\s*(?:class|suite|module)\s*[:=]\s*([\w.$-]+)\s*$", re.I)
+    _DIAGNOSTIC = re.compile(r"(?:exception|assertion|caused by:|\bat\s+[\w.$]+\(|error|failure)", re.I)
 
     def parse(self, file_bytes):
-
-        text = self.decode_file(file_bytes)
-
-        report = Report()
-
-        report.report_type = "txt"
-
-        report.suite_name = "Text Test Report"
-
-        report.timestamp = ""
-
-        classes = OrderedDict()
-
-        current_class = None
-
-        lines = text.splitlines()
-
-        i = 0
-
-        while i < len(lines):
-
-            line = lines[i].strip()
-
-            if line == "":
-
-                i += 1
+        report = self.create_report("txt", "Text Test Report")
+        classes, current_class, active, extracted = OrderedDict(), "UnknownClass", None, 0
+        for raw_line in self.decode_file(file_bytes).splitlines():
+            line = raw_line.rstrip()
+            if not line.strip():
                 continue
-
-            # -------------------------
-            # Class Name
-            # -------------------------
-
-            if (
-                " " not in line
-                and "." not in line
-                and "#" not in line
-                and ":" not in line
-            ):
-
-                current_class = line
-
-                if current_class not in classes:
-
-                    classes[current_class] = ClassResult(
-                        name=current_class
-                    )
-
-                i += 1
+            heading = self._HEADING.match(line)
+            if heading:
+                current_class = heading.group(1)
                 continue
+            parsed = self._parse_row(line, current_class)
+            if parsed:
+                classname, method, status, time = parsed
+                active = self.create_test(method, classname, status, time)
+                classes.setdefault(classname, self.create_class(classname)).add_test(active)
+                extracted += 1
+                continue
+            if active is not None:
+                active.logs.append(line)
+                if self._DIAGNOSTIC.search(line):
+                    if not active.message:
+                        active.message = line.strip()
+                    active.stacktrace = (active.stacktrace + "\n" + line.strip()).strip()
+                    if active.status == "pass":
+                        active.status = self.normalize_status("error")
+        for class_result in classes.values():
+            report.add_class(class_result)
+        report.has_test_data = bool(extracted)
+        report.parsing_metadata["extraction_statistics"] = {"strategy": "status_first_status_last_delimited", "test_records": extracted, "classes_extracted": len(classes)}
+        return self.finalize_report(report)
 
-            # -------------------------
-            # PASS / FAIL / SKIP
-            # -------------------------
+    def _parse_row(self, line, current_class):
+        match = self._DELIMITED.match(line)
+        if match:
+            return match.group("class"), match.group("method"), match.group("status"), self._time(match.group("tail"))
+        match = self._STATUS_FIRST.match(line)
+        if match:
+            classname, method = self._split_test(match.group("test"), current_class)
+            return classname, method, match.group("status"), self._time(match.group("tail"))
+        match = self._STATUS_LAST.search(line)
+        if match:
+            classname, method = self._split_test(match.group("test"), current_class)
+            return classname, method, match.group("status"), self._time(match.group("tail"))
+        return None
 
-            parts = line.split()
+    @staticmethod
+    def _split_test(value, default_class):
+        if "#" in value:
+            return value.split("#", 1)
+        if "$" in value:
+            return value.rsplit("$", 1)
+        if "." in value:
+            return value.rsplit(".", 1)
+        return default_class, value
 
-            if len(parts) >= 2:
-
-                status = parts[0].upper()
-
-                if status in ["PASS", "FAIL", "SKIP"]:
-
-                    function = parts[1]
-
-                    execution_time = 0
-
-                    if len(parts) >= 3:
-
-                        try:
-
-                            execution_time = float(parts[2])
-
-                        except:
-
-                            execution_time = 0
-
-                    message = ""
-
-                    stacktrace = ""
-
-                    # -------------------------
-                    # Read failure lines
-                    # -------------------------
-
-                    if status == "FAIL":
-
-                        failure_lines = []
-
-                        j = i + 1
-
-                        while j < len(lines):
-
-                            next_line = lines[j].rstrip()
-
-                            if next_line == "":
-
-                                break
-
-                            upper = next_line.upper()
-
-                            if upper.startswith("PASS") \
-                                    or upper.startswith("FAIL") \
-                                    or upper.startswith("SKIP"):
-
-                                break
-
-                            failure_lines.append(next_line)
-
-                            j += 1
-
-                        if failure_lines:
-
-                            message = failure_lines[0]
-
-                            if len(failure_lines) > 1:
-
-                                stacktrace = "\n".join(
-                                    failure_lines[1:]
-                                )
-
-                        i = j - 1
-
-                    if current_class is None:
-
-                        current_class = "UnknownClass"
-
-                        if current_class not in classes:
-
-                            classes[current_class] = ClassResult(
-                                name=current_class
-                            )
-
-                    test = TestResult(
-
-                        name=function,
-
-                        classname=current_class,
-
-                        status=status.lower(),
-
-                        time=execution_time,
-
-                        message=message,
-
-                        stacktrace=stacktrace
-
-                    )
-
-                    classes[current_class].add_test(test)
-
-            i += 1
-
-        for cls in classes.values():
-
-            report.add_class(cls)
-
-        report.sort_classes()
-
-        return report
+    def _time(self, text):
+        match = self._TIME.search(text)
+        if not match:
+            return 0
+        value = self.safe_float(match.group(1))
+        return value / 1000 if re.search(r"ms\b", text[match.start():match.end()], re.I) else value

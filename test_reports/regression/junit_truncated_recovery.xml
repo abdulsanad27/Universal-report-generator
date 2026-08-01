@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="InterruptedCarApiTests">
+  <testcase classname="com.android.car.api.VehicleHalTest" name="testGearSelection" result="failed" time="0.802"><failure message="Expected DRIVE">java.lang.AssertionError: Expected DRIVE
+Caused by: java.util.concurrent.TimeoutException: HAL callback did not arrive</failure></testcase>
+  <testcase classname="com.android.car.api.VehicleHalTest" name="testPark" result="passed" time="0.021"/>
+  <testcase classname="com.android.car.api.VehicleHalTest" name="testIgnition" result="failed" time="0.300"><failure message="process terminated">EOF occurred before suite was closed

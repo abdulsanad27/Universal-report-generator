@@ -1,0 +1,11 @@
+2026-08-02 09:20:00 event-log tradefed 12.4 module: CtsCarMediaTestCases
+- test: com.android.car.media.MediaBrowserTest#testBrowseRoot (status=PASSED) duration=0.188
+- test: com.android.car.media.MediaBrowserTest#testBrowseWithDisconnectedService (status=FAILED) duration=1.220
+java.lang.AssertionError: Expected browser connection to be rejected
+    at com.android.car.media.MediaBrowserTest.testBrowseWithDisconnectedService(MediaBrowserTest.java:211)
+Caused by: android.os.DeadObjectException: media service process died
+- test: com.android.car.media.MediaBrowserTest#testSearch (status=IGNORED) reason=requires online provider
+- test: com.android.car.media.MediaSessionTest#testSessionDestroyed (status=ERROR) duration=0.042
+java.lang.IllegalArgumentException: session token was null
+- test: com.android.car.media.MediaSessionTest#testSessionReconnect (status=SUCCESS) duration=0.510
+invocation finished

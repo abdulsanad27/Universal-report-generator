@@ -3,9 +3,6 @@ import os
 
 from config import Config
 
-# Detector
-from detector.file_detector import detect_file_type
-
 # Parser Factory
 from parsers.parser_factory import ParserFactory
 
@@ -49,26 +46,12 @@ def upload():
 
     try:
 
-        # -------------------------
-        # Detect report type
-        # -------------------------
-
-        report_type = detect_file_type(
-            uploaded_file.filename,
-            file_bytes
+        # ParserFactory uses content confidence and retries alternate parsers
+        # when a candidate produces an empty or invalid report.
+        report, report_type = ParserFactory.parse(
+            file_bytes,
+            filename=uploaded_file.filename,
         )
-
-        # -------------------------
-        # Get parser
-        # -------------------------
-
-        parser = ParserFactory.get_parser(report_type)
-
-        # -------------------------
-        # Parse report
-        # -------------------------
-
-        report = parser.parse(file_bytes)
 
         # -------------------------
         # Render HTML report

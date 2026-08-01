@@ -1,0 +1,13 @@
+Android Automotive local test run
+Class: com.android.car.input.RotaryControllerTest
+PASS testInitialFocus 0.018
+FAILED com.android.car.input.RotaryControllerTest#testWrapAround duration=125ms
+java.lang.AssertionError: focus should wrap to first item
+    at com.android.car.input.RotaryControllerTest.testWrapAround(RotaryControllerTest.java:130)
+Caused by: java.lang.IllegalStateException: focus area detached
+com.android.car.input.RotaryControllerTest#testLongPress SUCCESS elapsed=0.402
+com.android.car.input.RotaryControllerTest | testDisabledForTouch | DISABLED | duration=0
+com.android.car.display.OccupantZoneTest,testMoveDisplay,SKIPPED,1.2
+ERROR com.android.car.display.OccupantZoneTest#testInvalidZone 0.090
+android.car.CarNotConnectedException: occupant zone service unavailable
+PASS com.android.car.display.OccupantZoneTest#testDriverZone 0.030
